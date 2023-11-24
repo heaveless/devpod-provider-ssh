@@ -6,7 +6,8 @@ import (
 	"os"
 	"github.com/loft-sh/log"
 	"github.com/spf13/cobra"
-	"golang.org/x/crypto/ssh"
+
+	"github.com/heaveless/devpod-provider-ssh/utils"
 )
 
 type CommandCmd struct {}
@@ -17,7 +18,7 @@ func NewCommandCmd() *cobra.Command {
 		Use:   "command",
 		Short: "Command an instance",
 		RunE: func(_ *cobra.Command, args []string) error {
-			sshProvider, err := ssh.NewProvider(log.Default)
+			sshProvider, err := utils.NewProvider(log.Default)
 			if err != nil {
 				return err
 			}
@@ -35,7 +36,7 @@ func NewCommandCmd() *cobra.Command {
 
 func (cmd *CommandCmd) Run(
 	ctx context.Context,
-	providerSSH *ssh.SSHProvider,
+	providerSSH *utils.SSHProvider,
 	logs log.Logger,
 ) error {
 	command := os.Getenv("COMMAND")
@@ -43,5 +44,5 @@ func (cmd *CommandCmd) Run(
 		return fmt.Errorf("command environment variable is missing")
 	}
 
-	return ssh.Command(providerSSH, command)
+	return utils.Command(providerSSH, command)
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/loft-sh/log"
 	"github.com/spf13/cobra"
-	"golang.org/x/crypto/ssh"
+	"github.com/heaveless/devpod-provider-ssh/utils"
 )
 
 type InitCmd struct {}
@@ -15,7 +15,7 @@ func NewInitCmd() *cobra.Command {
 		Use: "init",
 		Short: "Init account",
 		RunE: func(_ *cobra.Command, args []string) error {
-			sshProvider, err := ssh.NewProvider(log.Default)
+			sshProvider, err := utils.NewProvider(log.Default)
 			if err != nil {
 				return err
 			}
@@ -33,8 +33,12 @@ func NewInitCmd() *cobra.Command {
 
 func (cmd *InitCmd) Run(
 	ctx context.Context,
-	providerSSH *ssh.sshProvider,
+	providerSSH *utils.SSHProvider,
 	logs log.Logger,
 ) error {
-	ssh.Init(providerSSH)
+	err := utils.Init(providerSSH)
+	if err != nil {
+		return err
+	}
+	return nil
 }
